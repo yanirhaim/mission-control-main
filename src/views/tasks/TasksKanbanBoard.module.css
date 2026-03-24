@@ -1,0 +1,64 @@
+.board {
+  display: flex;
+  gap: 1.5rem;
+  overflow-x: auto;
+  align-items: flex-start;
+  padding-block-end: 0.5rem;
+}
+
+.board::-webkit-scrollbar {
+  inline-size: 6px;
+  block-size: 6px;
+}
+
+.board::-webkit-scrollbar-thumb {
+  background-color: var(--mui-palette-divider);
+  border-radius: 999px;
+}
+
+.column {
+  min-inline-size: 18rem;
+  max-inline-size: 18rem;
+  border: 1px solid var(--mui-palette-divider);
+  border-radius: 16px;
+  background: color-mix(in srgb, var(--mui-palette-background-paper) 92%, transparent);
+}
+
+.columnHeader {
+  position: sticky;
+  inset-block-start: 0;
+  z-index: 1;
+  backdrop-filter: blur(12px);
+  background: color-mix(in srgb, var(--mui-palette-background-paper) 86%, transparent);
+}
+
+.columnBody {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  min-block-size: 14rem;
+  max-block-size: 70vh;
+  overflow-y: auto;
+}
+
+.columnBody::-webkit-scrollbar {
+  inline-size: 6px;
+}
+
+.columnBody::-webkit-scrollbar-thumb {
+  background-color: var(--mui-palette-divider);
+  border-radius: 999px;
+}
+
+.taskCard {
+  cursor: pointer;
+  transition:
+    transform 150ms ease,
+    box-shadow 150ms ease,
+    border-color 150ms ease;
+}
+
+.taskCard:hover {
+  transform: translateY(-2px);
+  border-color: var(--mui-palette-primary-main);
+}
