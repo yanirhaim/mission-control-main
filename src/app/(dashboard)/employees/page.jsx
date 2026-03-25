@@ -1,3 +1,7 @@
+'use client'
+
+import { useCallback, useEffect, useState } from 'react'
+
 import Link from 'next/link'
 
 import Grid from '@mui/material/Grid'
@@ -6,158 +10,162 @@ import CardContent from '@mui/material/CardContent'
 import Chip from '@mui/material/Chip'
 import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
-
-const departmentColor = {
-  Operations: 'primary',
-  Product: 'success',
-  Engineering: 'info',
-  People: 'warning',
-  Finance: 'secondary',
-  Support: 'error'
-}
-
-const employees = [
-  {
-    id: 1,
-    name: 'Ava Patel',
-    role: 'Operations Lead',
-    department: 'Operations',
-    status: 'On site',
-    image: createAvatar('Ava Patel', '#0F766E')
-  },
-  {
-    id: 2,
-    name: 'Lucas Reed',
-    role: 'Senior Product Designer',
-    department: 'Product',
-    status: 'Remote',
-    image: createAvatar('Lucas Reed', '#7C3AED')
-  },
-  {
-    id: 3,
-    name: 'Mia Chen',
-    role: 'Frontend Engineer',
-    department: 'Engineering',
-    status: 'Hybrid',
-    image: createAvatar('Mia Chen', '#2563EB')
-  },
-  {
-    id: 4,
-    name: 'Noah Kim',
-    role: 'People Partner',
-    department: 'People',
-    status: 'Traveling',
-    image: createAvatar('Noah Kim', '#D97706')
-  },
-  {
-    id: 5,
-    name: 'Sofia Alvarez',
-    role: 'Finance Manager',
-    department: 'Finance',
-    status: 'Remote',
-    image: createAvatar('Sofia Alvarez', '#BE185D')
-  },
-  {
-    id: 6,
-    name: 'Ethan Brooks',
-    role: 'Customer Support Lead',
-    department: 'Support',
-    status: 'On call',
-    image: createAvatar('Ethan Brooks', '#DC2626')
-  }
-]
-
-function createAvatar(name, background) {
-  const initials = name
-    .split(' ')
-    .map(part => part[0])
-    .join('')
-    .slice(0, 2)
-
-  const svg = `
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 320">
-      <rect width="320" height="320" fill="${background}" />
-      <text
-        x="50%"
-        y="53%"
-        text-anchor="middle"
-        dominant-baseline="middle"
-        fill="#ffffff"
-        font-family="Arial, sans-serif"
-        font-size="108"
-        font-weight="700"
-      >
-        ${initials}
-      </text>
-    </svg>
-  `
-
-  return `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`
-}
+import CircularProgress from '@mui/material/CircularProgress'
+import IconButton from '@mui/material/IconButton'
+import Tooltip from '@mui/material/Tooltip'
 
 export default function Page() {
+  const [agents, setAgents] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
+  const [lastRefresh, setLastRefresh] = useState(null)
+
+  const fetchAgents = useCallback(async () => {
+    try {
+      const res = await fetch('/api/agents', { cache: 'no-store' })
+      const data = await res.json()
+
+      if (data.ok) {
+        setAgents(data.agents)
+        setError(null)
+      } else {
+        setError(data.error ?? 'Unknown error')
+      }
+    } catch (err) {
+      setError(err.message)
+    } finally {
+      setLoading(false)
+      setLastRefresh(new Date())
+    }
+  }, [])
+
+  useEffect(() => {
+    fetchAgents()
+  }, [fetchAgents])
+
+  // Auto-refresh every 15 seconds
+  useEffect(() => {
+    const interval = setInterval(fetchAgents, 15000)
+
+    return () => clearInterval(interval)
+  }, [fetchAgents])
+
   return (
     <Card>
       <CardContent className='flex flex-col gap-6'>
         <div className='flex flex-wrap items-center justify-between gap-4'>
           <div>
-            <Typography variant='h5'>Employees</Typography>
-            <Typography>{`Total ${employees.length} active team members across Mission Control`}</Typography>
+            <Typography variant='h5'>Agents</Typography>
+            <Typography color='text.secondary'>
+              {loading
+                ? 'Loading active sessions…'
+                : error
+                  ? 'Could not load agent sessions'
+                  : `${agents.length} agent${agents.length === 1 ? '' : 's'} across Mission Control`}
+            </Typography>
+          </div>
+          <div className='flex items-center gap-2'>
+            {lastRefresh && (
+              <Typography variant='caption' color='text.secondary'>
+                Updated {lastRefresh.toLocaleTimeString()}
+              </Typography>
+            )}
+            <Tooltip title='Refresh'>
+              <IconButton size='small' onClick={fetchAgents} disabled={loading}>
+                <i className={`tabler-refresh text-base ${loading ? 'animate-spin' : ''}`} />
+              </IconButton>
+            </Tooltip>
           </div>
         </div>
 
-        <Grid container spacing={6}>
-          {employees.map(employee => (
-            <Grid size={{ xs: 12, sm: 6, md: 4 }} key={employee.id}>
-              <div className='border rounded bs-full overflow-hidden'>
-                <div className='pli-2 pbs-2'>
-                  <Link href='/employees' className='flex'>
+        {loading && agents.length === 0 ? (
+          <div className='flex justify-center py-12'>
+            <CircularProgress />
+          </div>
+        ) : error && agents.length === 0 ? (
+          <div className='flex flex-col items-center gap-3 py-12'>
+            <i className='tabler-alert-circle text-4xl text-error' />
+            <Typography color='error'>{error}</Typography>
+            <Button variant='tonal' onClick={fetchAgents}>Retry</Button>
+          </div>
+        ) : (
+          <Grid container spacing={6}>
+            {agents.map(agent => (
+              <Grid size={{ xs: 12, sm: 6, md: 4 }} key={agent.id}>
+                <div className='border rounded bs-full overflow-hidden'>
+                  <div className='pli-2 pbs-2'>
                     <div className='relative is-full overflow-hidden rounded aspect-square bg-actionHover'>
                       <img
-                        src={employee.image}
-                        alt={employee.name}
+                        src={agent.avatar}
+                        alt={agent.name}
                         className='absolute inset-0 is-full bs-full object-cover'
                       />
                     </div>
-                  </Link>
-                </div>
+                  </div>
 
-                <div className='flex flex-col gap-4 p-5'>
-                  <div className='flex items-center justify-between gap-3'>
-                    <Chip
-                      label={employee.department}
-                      variant='tonal'
-                      size='small'
-                      color={departmentColor[employee.department]}
-                    />
-                    <div className='flex items-center gap-1 text-textSecondary'>
-                      <i className='tabler-activity-heartbeat text-base text-success' />
-                      <Typography color='text.secondary'>{employee.status}</Typography>
+                  <div className='flex flex-col gap-4 p-5'>
+                    <div className='flex items-center justify-between gap-3'>
+                      <Chip
+                        label={agent.department}
+                        variant='tonal'
+                        size='small'
+                        color={agent.departmentColor}
+                      />
+                      <div className='flex items-center gap-1'>
+                        <i
+                          className={`tabler-circle-filled text-xs ${
+                            agent.status === 'Active'
+                              ? 'text-success'
+                              : agent.status === 'Idle'
+                                ? 'text-warning'
+                                : 'text-textDisabled'
+                          }`}
+                        />
+                        <Typography variant='body2' color='text.secondary'>
+                          {agent.status}
+                        </Typography>
+                      </div>
                     </div>
-                  </div>
 
-                  <div className='flex flex-col gap-1'>
-                    <Link href='/employees' className='hover:text-primary'>
-                      <Typography variant='h5'>{employee.name}</Typography>
-                    </Link>
-                    <Typography color='text.primary'>{employee.role}</Typography>
-                  </div>
+                    <div className='flex flex-col gap-1'>
+                      <Typography variant='h5'>{agent.name}</Typography>
+                      <Typography color='text.primary'>{agent.role}</Typography>
+                      {agent.model && (
+                        <Typography variant='caption' color='text.secondary'>
+                          {agent.model}
+                        </Typography>
+                      )}
+                    </div>
 
-                  <div className='flex flex-wrap gap-4'>
+                    {agent.channel && (
+                      <div className='flex items-center gap-1 text-textSecondary'>
+                        <i className='tabler-antenna-bars-5 text-sm' />
+                        <Typography variant='caption' color='text.secondary'>
+                          {agent.channel}
+                        </Typography>
+                        {agent.totalTokens > 0 && (
+                          <Typography variant='caption' color='text.secondary' className='mli-auto'>
+                            {(agent.totalTokens / 1000).toFixed(1)}k tokens
+                          </Typography>
+                        )}
+                      </div>
+                    )}
+
                     <Button
                       fullWidth
                       variant='tonal'
                       endIcon={<i className='tabler-message-circle' />}
                       href='/chat'
+                      component={Link}
                     >
                       Message
                     </Button>
                   </div>
                 </div>
-              </div>
-            </Grid>
-          ))}
-        </Grid>
+              </Grid>
+            ))}
+          </Grid>
+        )}
       </CardContent>
     </Card>
   )

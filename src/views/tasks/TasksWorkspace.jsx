@@ -22,7 +22,7 @@ import TasksKanbanBoard from './TasksKanbanBoard'
 import TaskDrawer from './TaskDrawer'
 import { blockingOptions, formatDate, getDependencyTask, isTaskBlocked, statusConfig } from './taskUtils'
 
-const TasksWorkspace = ({ initialTasks, projects }) => {
+const TasksWorkspace = ({ initialTasks, projects, onAdvanceTask }) => {
   const [tasks, setTasks] = useState(initialTasks)
   const [viewMode, setViewMode] = useState('list')
   const [search, setSearch] = useState('')
@@ -96,6 +96,11 @@ const TasksWorkspace = ({ initialTasks, projects }) => {
         })
       )
     })
+
+    // Persist to API if callback provided
+    if (onAdvanceTask) {
+      onAdvanceTask(taskId, nextStatus)
+    }
   }
 
   const handleFilterChange = setter => event => {

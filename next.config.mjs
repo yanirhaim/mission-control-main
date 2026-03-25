@@ -1,15 +1,16 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-    basePath: process.env.BASEPATH,
-    redirects: async () => {
-        return [
-            {
-                source: '/',
-                destination: '/home',
-                permanent: true,
-                locale: false
-            }
-        ];
-    }
-};
-export default nextConfig;
+  allowedDevOrigins: ['76.13.2.52', 'localhost', 'localhost:3000'],
+  redirects: async () => {
+    return [
+      {
+        source: '/',
+        destination: '/home',
+        permanent: true,
+        locale: false
+      }
+    ]
+  }
+}
+
+export default nextConfig

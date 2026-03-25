@@ -1,5 +1,6 @@
 // MUI Imports
 import InitColorSchemeScript from '@mui/material/InitColorSchemeScript'
+import { AppRouterCacheProvider } from '@mui/material-nextjs/v14-appRouter'
 
 // Third-party Imports
 import 'react-perfect-scrollbar/dist/css/styles.css'
@@ -14,15 +15,13 @@ import '@/app/globals.css'
 import '@assets/iconify-icons/generated-icons.css'
 
 export const metadata = {
-  title: 'Vuexy - MUI Next.js Admin Dashboard Template',
-  description:
-    'Vuexy - MUI Next.js Admin Dashboard Template - is the most developer friendly & highly customizable Admin Dashboard Template based on MUI v5.'
+  title: 'Mission Control',
+  description: 'Mission Control - Agent management dashboard'
 }
 
 const RootLayout = async props => {
   const { children } = props
 
-  // Type guard to ensure lang is a valid Locale
   // Vars
   const systemMode = await getSystemMode()
   const direction = 'ltr'
@@ -31,7 +30,9 @@ const RootLayout = async props => {
     <html id='__next' lang='en' dir={direction} suppressHydrationWarning>
       <body className='flex is-full min-bs-full flex-auto flex-col'>
         <InitColorSchemeScript attribute='data' defaultMode={systemMode} />
-        {children}
+        <AppRouterCacheProvider options={{ prepend: true }}>
+          {children}
+        </AppRouterCacheProvider>
       </body>
     </html>
   )

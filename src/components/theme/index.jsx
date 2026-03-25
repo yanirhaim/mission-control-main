@@ -6,12 +6,10 @@ import { useMemo } from 'react'
 // MUI Imports
 import { deepmerge } from '@mui/utils'
 import { ThemeProvider, lighten, darken, createTheme } from '@mui/material/styles'
-import { AppRouterCacheProvider } from '@mui/material-nextjs/v14-appRouter'
 import CssBaseline from '@mui/material/CssBaseline'
 
 // Third-party Imports
 import { useMedia } from 'react-use'
-import stylisRTLPlugin from 'stylis-plugin-rtl'
 
 // Component Imports
 import ModeChanger from './ModeChanger'
@@ -82,28 +80,16 @@ const CustomThemeProvider = props => {
   }, [settings.primaryColor, settings.skin, currentMode])
 
   return (
-    <AppRouterCacheProvider
-      options={{
-        prepend: true,
-        ...(direction === 'rtl' && {
-          key: 'rtl',
-          stylisPlugins: [stylisRTLPlugin]
-        })
-      }}
+    <ThemeProvider
+      theme={theme}
+      defaultMode={systemMode}
+      modeStorageKey={`${themeConfig.templateName.toLowerCase().split(' ').join('-')}-mui-template-mode`}
+      forceThemeRerender
     >
-      <ThemeProvider
-        theme={theme}
-        defaultMode={systemMode}
-        modeStorageKey={`${themeConfig.templateName.toLowerCase().split(' ').join('-')}-mui-template-mode`}
-        forceThemeRerender
-      >
-        <>
-          <ModeChanger systemMode={systemMode} />
-          <CssBaseline />
-          {children}
-        </>
-      </ThemeProvider>
-    </AppRouterCacheProvider>
+      <ModeChanger systemMode={systemMode} />
+      <CssBaseline />
+      {children}
+    </ThemeProvider>
   )
 }
 
