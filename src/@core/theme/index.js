@@ -1,6 +1,3 @@
-// Next Imports
-import { Public_Sans } from 'next/font/google'
-
 // Theme Options Imports
 import overrides from './overrides'
 import colorSchemes from './colorSchemes'
@@ -8,8 +5,6 @@ import spacing from './spacing'
 import shadows from './shadows'
 import customShadows from './customShadows'
 import typography from './typography'
-
-const public_sans = Public_Sans({ subsets: ['latin'], weight: ['300', '400', '500', '600', '700', '800', '900'] })
 
 const theme = (settings, mode, direction) => {
   return {
@@ -28,7 +23,7 @@ const theme = (settings, mode, direction) => {
       }
     },
     shadows: shadows(mode),
-    typography: typography(public_sans.style.fontFamily),
+    typography: typography('"Google Sans", sans-serif'),
     customShadows: customShadows(mode),
     mainColorChannels: {
       light: '47 43 61',

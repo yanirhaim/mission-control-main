@@ -13,7 +13,7 @@ import TablePagination from '@mui/material/TablePagination'
 import IconButton from '@mui/material/IconButton'
 import Tooltip from '@mui/material/Tooltip'
 
-import CustomAvatar from '@core/components/mui/Avatar'
+import Avatar from '@mui/material/Avatar'
 import CustomTextField from '@core/components/mui/TextField'
 
 import tableStyles from '@core/styles/table.module.css'
@@ -286,9 +286,11 @@ const TasksWorkspace = ({ initialTasks, projects, onAdvanceTask }) => {
                           </td>
                           <td>
                             <div className='flex items-center gap-3'>
-                              <CustomAvatar size={28} skin='light' color='primary'>
-                                {(task.assignedToDisplay ?? task.assignedTo).slice(0, 2).toUpperCase()}
-                              </CustomAvatar>
+                              <Avatar
+                                src={task.assignedToAvatar}
+                                alt={task.assignedToDisplay ?? task.assignedTo}
+                                sx={{ width: 28, height: 28 }}
+                              />
                               <Typography color='text.primary'>{task.assignedToDisplay ?? task.assignedTo}</Typography>
                             </div>
                           </td>

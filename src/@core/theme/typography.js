@@ -16,7 +16,7 @@ const typography = fontFamily => ({
           '"Segoe UI Symbol"'
         ].join(',')
       : fontFamily,
-  fontSize: 13.125,
+  fontSize: 11,
   h1: {
     fontSize: '2.875rem',
     fontWeight: 500,

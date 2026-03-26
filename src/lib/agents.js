@@ -11,6 +11,7 @@ export const AGENT_REGISTRY = {
     department: 'Leadership',
     color: '#7C3AED',
     emoji: '🦁',
+    avatar: '/images/avatars/luchito.png',
   },
   mantis: {
     name: 'Mantis',
@@ -18,6 +19,7 @@ export const AGENT_REGISTRY = {
     department: 'Engineering',
     color: '#2563EB',
     emoji: '🪲',
+    avatar: '/images/avatars/mantis.png',
   },
   rocket: {
     name: 'Rocket',
@@ -25,6 +27,7 @@ export const AGENT_REGISTRY = {
     department: 'Engineering',
     color: '#0F766E',
     emoji: '🚀',
+    avatar: '/images/avatars/rocket.png',
   },
   'star-lord': {
     name: 'Star Lord',
@@ -32,6 +35,7 @@ export const AGENT_REGISTRY = {
     department: 'Engineering',
     color: '#1D4ED8',
     emoji: '⭐',
+    avatar: '/images/avatars/starlord.png',
   },
   grok: {
     name: 'Grok',
@@ -39,6 +43,7 @@ export const AGENT_REGISTRY = {
     department: 'Engineering',
     color: '#0284C7',
     emoji: '🔬',
+    avatar: '/images/avatars/grok.png',
   },
 }
 
@@ -71,11 +76,26 @@ export function agentColor(agentId) {
 }
 
 /**
- * Build an SVG data-URI avatar for an agent.
+ * Resolve an agent ID to its avatar image path.
+ * Falls back to null if not found.
  * @param {string} agentId
- * @returns {string} data:image/svg+xml URI
+ * @returns {string|null}
+ */
+export function agentAvatar(agentId) {
+  return AGENT_REGISTRY[agentId]?.avatar ?? null
+}
+
+/**
+ * Build an avatar for an agent — returns the image path if available,
+ * otherwise falls back to an SVG data-URI with initials.
+ * @param {string} agentId
+ * @returns {string}
  */
 export function buildAgentAvatar(agentId) {
+  const img = agentAvatar(agentId)
+
+  if (img) return img
+
   const name = agentDisplayName(agentId)
   const color = agentColor(agentId)
 

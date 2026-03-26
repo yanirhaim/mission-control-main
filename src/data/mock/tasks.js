@@ -23,10 +23,11 @@ export const tasks = [
     projectId: 'PRJ-MISSIONCTRL',
     projectName: 'Mission Control Core',
     status: 'finished',
-    assignedTo: 'ceo-agent',
+    assignedTo: 'main',
     created: '2026-03-18',
     updated: '2026-03-20',
     dependsOn: null,
+    githubRepo: null,
     description:
       'Document the operating rules for projects, tasks, ownership, and review flow so all future work runs through a strict task system.',
     acceptanceCriteria: [
@@ -51,10 +52,11 @@ export const tasks = [
     projectId: 'PRJ-MISSIONCTRL',
     projectName: 'Mission Control Core',
     status: 'needs_review',
-    assignedTo: 'frontend-dev',
+    assignedTo: 'mantis',
     created: '2026-03-20',
     updated: '2026-03-23',
     dependsOn: 'PRJ-MISSIONCTRL-T001',
+    githubRepo: 'https://github.com/openclaw/mission-control/tree/feat/tasks-ux',
     description:
       'Translate the workflow into a dashboard-friendly tasks experience that can scale from global operations view to project-specific review.',
     acceptanceCriteria: [
@@ -78,10 +80,11 @@ export const tasks = [
     projectId: 'PRJ-MISSIONCTRL',
     projectName: 'Mission Control Core',
     status: 'in_progress',
-    assignedTo: 'frontend-dev',
+    assignedTo: 'mantis',
     created: '2026-03-23',
     updated: '2026-03-24',
     dependsOn: 'PRJ-MISSIONCTRL-T002',
+    githubRepo: 'https://github.com/openclaw/mission-control/tree/feat/tasks-view-v1',
     description:
       'Build the first production-ready tasks route with global filtering, review drawer, and workflow-safe state transitions.',
     acceptanceCriteria: [
@@ -103,10 +106,11 @@ export const tasks = [
     projectId: 'PRJ-IMPOSTER',
     projectName: "Who's The Imposter",
     status: 'finished',
-    assignedTo: 'product-manager',
+    assignedTo: 'star-lord',
     created: '2026-03-17',
     updated: '2026-03-18',
     dependsOn: null,
+    githubRepo: null,
     description:
       'Create the initial movie category content set, balanced across difficulty levels and ready for implementation.',
     acceptanceCriteria: [
@@ -131,10 +135,11 @@ export const tasks = [
     projectId: 'PRJ-IMPOSTER',
     projectName: "Who's The Imposter",
     status: 'needs_review',
-    assignedTo: 'backend-dev',
+    assignedTo: 'rocket',
     created: '2026-03-18',
     updated: '2026-03-22',
     dependsOn: 'PRJ-IMPOSTER-T004',
+    githubRepo: 'https://github.com/openclaw/whos-the-imposter/tree/feat/movie-db',
     description:
       'Add the approved movie entries to the category data store and preserve the existing schema conventions.',
     acceptanceCriteria: [
@@ -158,10 +163,11 @@ export const tasks = [
     projectId: 'PRJ-IMPOSTER',
     projectName: "Who's The Imposter",
     status: 'in_queue',
-    assignedTo: 'frontend-dev',
+    assignedTo: 'mantis',
     created: '2026-03-18',
     updated: '2026-03-18',
     dependsOn: 'PRJ-IMPOSTER-T005',
+    githubRepo: null,
     description:
       'Expose the new Movies category in the game flow once the backend content is approved and finalized.',
     acceptanceCriteria: [
@@ -180,10 +186,11 @@ export const tasks = [
     projectId: 'PRJ-OPENCLAW',
     projectName: 'OpenClaw Org Buildout',
     status: 'in_queue',
-    assignedTo: 'ops-strategy',
+    assignedTo: 'grok',
     created: '2026-03-22',
     updated: '2026-03-22',
     dependsOn: null,
+    githubRepo: null,
     description:
       'Draft the initial department map, reporting lines, and role owners for the OpenClaw operating model.',
     acceptanceCriteria: [
@@ -194,6 +201,84 @@ export const tasks = [
     notes:
       'Project is paused, so the task remains queued until Yanir reactivates the project.',
     activityLog: ['2026-03-22 - Task created by Yanir'],
+    deliverable: ''
+  },
+  {
+    id: 'PRJ-MISSIONCTRL-T004',
+    title: 'Add Kanban board view to tasks workspace',
+    projectId: 'PRJ-MISSIONCTRL',
+    projectName: 'Mission Control Core',
+    status: 'needs_review',
+    assignedTo: 'mantis',
+    created: '2026-03-24',
+    updated: '2026-03-25',
+    dependsOn: 'PRJ-MISSIONCTRL-T003',
+    githubRepo: 'https://github.com/openclaw/mission-control/tree/feat/kanban-board',
+    description:
+      'Implement a Kanban column view alongside the existing list view, allowing operators to see task status at a glance and move cards through the workflow visually.',
+    acceptanceCriteria: [
+      'Board renders four columns matching the four task statuses.',
+      'Cards show title, ID, project, assignee, and dependency state.',
+      'View toggle persists within the session.',
+      'Empty columns show a clear empty state.'
+    ],
+    notes: 'Column widths need to handle long titles without breaking layout.',
+    activityLog: [
+      '2026-03-24 - Task created by ceo-agent',
+      '2026-03-24 - Status changed to in_progress by frontend-dev',
+      '2026-03-25 - Status changed to needs_review by frontend-dev'
+    ],
+    deliverable: 'Kanban board component integrated into the tasks workspace with full toggle support.'
+  },
+  {
+    id: 'PRJ-MISSIONCTRL-T005',
+    title: 'Connect tasks workspace to live gateway API',
+    projectId: 'PRJ-MISSIONCTRL',
+    projectName: 'Mission Control Core',
+    status: 'needs_review',
+    assignedTo: 'rocket',
+    created: '2026-03-25',
+    updated: '2026-03-26',
+    dependsOn: 'PRJ-MISSIONCTRL-T004',
+    githubRepo: 'https://github.com/openclaw/mission-control/tree/feat/gateway-integration',
+    description:
+      'Replace mock task data with real API calls through the OpenClaw gateway so that task state reflects actual agent activity.',
+    acceptanceCriteria: [
+      'Tasks load from the gateway on mount.',
+      'Status transitions call the correct gateway endpoint.',
+      'Error states are handled gracefully with a visible message.'
+    ],
+    notes: 'Gateway auth token must be injected via env var, not hardcoded.',
+    activityLog: [
+      '2026-03-25 - Task created by ceo-agent',
+      '2026-03-25 - Status changed to in_progress by backend-dev',
+      '2026-03-26 - Status changed to needs_review by backend-dev'
+    ],
+    deliverable: 'Live data integration with gateway, including optimistic status updates.'
+  },
+  {
+    id: 'PRJ-IMPOSTER-T007',
+    title: 'Add round timer and score display',
+    projectId: 'PRJ-IMPOSTER',
+    projectName: "Who's The Imposter",
+    status: 'in_progress',
+    assignedTo: 'mantis',
+    created: '2026-03-24',
+    updated: '2026-03-26',
+    dependsOn: null,
+    githubRepo: 'https://github.com/openclaw/whos-the-imposter/tree/feat/round-timer',
+    description:
+      'Add a visible countdown timer per round and a running score panel so players can track game progress without relying on the host.',
+    acceptanceCriteria: [
+      'Timer counts down from a configurable duration.',
+      'Score updates after each round resolves.',
+      'Timer and score are visible on all screen sizes.'
+    ],
+    notes: 'Timer logic should be server-authoritative to prevent client manipulation.',
+    activityLog: [
+      '2026-03-24 - Task created by ceo-agent',
+      '2026-03-26 - Status changed to in_progress by frontend-dev'
+    ],
     deliverable: ''
   }
 ]

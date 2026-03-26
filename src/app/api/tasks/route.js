@@ -3,7 +3,7 @@ import path from 'path'
 
 import { NextResponse } from 'next/server'
 
-import { agentDisplayName, agentColor } from '@/lib/agents'
+import { agentDisplayName, agentColor, buildAgentAvatar } from '@/lib/agents'
 import { projects as mockProjects, tasks as mockTasks } from '@/data/mock/tasks'
 
 const VAULT_PROJECTS_DIR = '/root/.openclaw/workspace/vault/projects'
@@ -86,6 +86,7 @@ async function loadFromVault() {
           assignedTo: rawAssignedTo,
           assignedToDisplay: agentDisplayName(rawAssignedTo),
           assignedToColor: agentColor(rawAssignedTo),
+          assignedToAvatar: buildAgentAvatar(rawAssignedTo),
           created: fm.created || '',
           updated: fm.updated || '',
           dependsOn: fm.dependsOn || null,
@@ -122,6 +123,7 @@ async function getState() {
       ...t,
       assignedToDisplay: agentDisplayName(t.assignedTo),
       assignedToColor: agentColor(t.assignedTo),
+      assignedToAvatar: buildAgentAvatar(t.assignedTo),
     })),
   }
 
