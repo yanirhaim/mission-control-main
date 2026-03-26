@@ -52,13 +52,10 @@ export async function GET() {
     }
   }
 
-  // Merge registry + live sessions
-  const seenIds = new Set()
+  // Merge registry + live sessions — only registry agents are shown
   const agents = []
 
-  // 1. Registry agents (always present)
   for (const [agentId, meta] of Object.entries(AGENT_REGISTRY)) {
-    seenIds.add(agentId)
     const session = sessionByAgentId[agentId]
 
     const isRunning = session?.status === 'running'
@@ -80,35 +77,6 @@ export async function GET() {
       totalTokens: session?.totalTokens ?? 0,
       estimatedCostUsd: session?.estimatedCostUsd ?? 0,
       lastSeen: session?.updatedAt ? new Date(session.updatedAt).toISOString() : null,
-      avatar: buildAgentAvatar(agentId),
-    })
-  }
-
-  // 2. Any live sessions NOT in registry (unknown/ad-hoc agents)
-  for (const session of liveSessions) {
-    const agentId = extractAgentId(session)
-
-    if (seenIds.has(agentId)) continue
-    seenIds.add(agentId)
-
-    const isRunning = session.status === 'running'
-
-    agents.push({
-      id: session.sessionId,
-      sessionKey: session.key,
-      agentId,
-      name: agentId,
-      role: 'Agent',
-      department: 'Operations',
-      departmentColor: 'primary',
-      color: '#6B7280',
-      status: isRunning ? 'Active' : 'Idle',
-      statusColor: isRunning ? 'success' : 'warning',
-      model: session.model ?? null,
-      channel: session.lastChannel ?? session.channel ?? null,
-      totalTokens: session.totalTokens ?? 0,
-      estimatedCostUsd: session.estimatedCostUsd ?? 0,
-      lastSeen: session.updatedAt ? new Date(session.updatedAt).toISOString() : null,
       avatar: buildAgentAvatar(agentId),
     })
   }
