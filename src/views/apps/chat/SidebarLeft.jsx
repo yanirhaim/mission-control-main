@@ -3,21 +3,27 @@ import { useState } from 'react'
 import Collapse from '@mui/material/Collapse'
 import Divider from '@mui/material/Divider'
 import Drawer from '@mui/material/Drawer'
-import IconButton from '@mui/material/IconButton'
 import Typography from '@mui/material/Typography'
+import { styled } from '@mui/material/styles'
 import classnames from 'classnames'
 import PerfectScrollbar from 'react-perfect-scrollbar'
 
 import CustomAvatar from '@core/components/mui/Avatar'
-import CustomChip from '@core/components/mui/Chip'
-import OptionMenu from '@core/components/option-menu'
-import AvatarWithBadge from './AvatarWithBadge'
 
-export const statusObj = {
-  busy: 'error',
-  away: 'warning',
-  online: 'success',
-  offline: 'secondary'
+const BadgeContentSpan = styled('span', {
+  name: 'MuiBadgeContentSpan'
+})(({ color, badgeSize }) => ({
+  width: badgeSize || 8,
+  height: badgeSize || 8,
+  borderRadius: '50%',
+  backgroundColor: `var(--mui-palette-${color}-main)`,
+  boxShadow: '0 0 0 2px var(--mui-palette-background-paper)'
+}))
+
+const threadStatusColor = {
+  active: 'success',
+  completed: 'secondary',
+  queued: 'warning'
 }
 
 const ScrollWrapper = ({ children, isBelowLgScreen }) => {
@@ -65,17 +71,19 @@ const ThreadCard = ({ thread, isActive, onClick }) => (
       <span className='absolute start-1 top-0 h-3.5 w-3 rounded-es-[10px] border-b border-s border-current opacity-45' />
     </span>
     <Typography
-      className={classnames('truncate text-[13px]', isActive ? 'font-medium text-textPrimary' : 'text-inherit')}
+      className={classnames('truncate text-[13px] flex-1 min-w-0', isActive ? 'font-medium text-textPrimary' : 'text-inherit')}
     >
       {thread.title}
     </Typography>
-    {thread.unread > 0 ? <CustomChip round='true' label={thread.unread} color='error' size='small' className='mis-auto' /> : null}
+    {thread.status && (
+      <BadgeContentSpan color={threadStatusColor[thread.status] || 'secondary'} className='shrink-0 mis-auto' />
+    )}
   </button>
 )
 
 const SidebarLeft = props => {
   const {
-    chatStore,
+    workspaces,
     activeWorkspace,
     activeChannel,
     activeThread,
@@ -89,7 +97,9 @@ const SidebarLeft = props => {
   } = props
 
   const drawerWidth = isBelowSmScreen ? '100%' : 420
-  const [collapsedChannels, setCollapsedChannels] = useState({})
+
+  // Uncategorized channels start collapsed
+  const [collapsedChannels, setCollapsedChannels] = useState({ uncategorized: false })
 
   const isChannelOpen = channelId => collapsedChannels[channelId] !== false
 
@@ -132,7 +142,7 @@ const SidebarLeft = props => {
 
           <Divider flexItem />
 
-          {chatStore.workspaces.map(workspace => (
+          {workspaces?.map(workspace => (
             <WorkspaceAvatar
               key={workspace.id}
               workspace={workspace}
@@ -156,9 +166,7 @@ const SidebarLeft = props => {
                     className='mb-2 flex w-full items-center justify-between rounded-xl border-0 bg-transparent px-2 py-1.5 text-left hover:bg-[var(--mui-palette-action-hover)] appearance-none'
                   >
                     <div className='flex items-center gap-2'>
-                      <i
-                        className={channel.kind === 'announce' ? 'tabler-speakerphone text-base text-textSecondary' : 'tabler-hash text-base text-textSecondary'}
-                      />
+                      <i className='tabler-hash text-base text-textSecondary' />
                       <Typography className='text-sm font-semibold text-textPrimary'>#{channel.name}</Typography>
                     </div>
                     <i
@@ -173,11 +181,11 @@ const SidebarLeft = props => {
                     <div className='space-y-0.5 pl-7'>
                       {channel.threads.map(thread => (
                         <ThreadCard
-                          key={thread.id}
+                          key={thread.sessionKey}
                           thread={thread}
-                          isActive={channel.id === activeChannel?.id && thread.id === activeThread?.id}
+                          isActive={channel.id === activeChannel?.id && thread.sessionKey === activeThread?.sessionKey}
                           onClick={() => {
-                            selectThread(channel.id, thread.id)
+                            selectThread(channel.id, thread.sessionKey)
                             if (isBelowMdScreen) setSidebarOpen(false)
                           }}
                         />
@@ -190,19 +198,13 @@ const SidebarLeft = props => {
           </ScrollWrapper>
 
           <div className='mt-auto flex items-center gap-3 border-t bg-backgroundDefault px-4 py-3'>
-            <AvatarWithBadge
-              alt={chatStore.profileUser.fullName}
-              src={chatStore.profileUser.avatar}
-              badgeColor={statusObj[chatStore.profileUser.status]}
-            />
+            <CustomAvatar color='primary' skin='light' size={40}>
+              Y
+            </CustomAvatar>
             <div className='min-is-0 flex-auto'>
-              <Typography className='truncate text-sm font-semibold text-textPrimary'>{chatStore.profileUser.fullName}</Typography>
-              <Typography className='truncate text-xs text-textSecondary'>{chatStore.profileUser.role}</Typography>
+              <Typography className='truncate text-sm font-semibold text-textPrimary'>Yanir</Typography>
+              <Typography className='truncate text-xs text-textSecondary'>Operator</Typography>
             </div>
-            <OptionMenu
-              iconClassName='text-textSecondary'
-              options={['Profile', 'Mute Notifications', 'Preferences']}
-            />
           </div>
         </div>
       </div>
