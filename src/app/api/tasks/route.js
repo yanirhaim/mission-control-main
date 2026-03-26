@@ -76,6 +76,9 @@ async function loadFromVault() {
         const criteriaMatch = content.match(/## Acceptance Criteria\n([\s\S]*?)(?:\n##|$)/)
 
         const rawAssignedTo = fm.assignedTo || 'unassigned'
+        const githubRepo = (fm.repo && fm.branch)
+          ? `https://github.com/${fm.repo}/tree/${fm.branch}`
+          : null
 
         tasks.push({
           id: fm.taskId || file.replace('.md', ''),
@@ -87,6 +90,7 @@ async function loadFromVault() {
           assignedToDisplay: agentDisplayName(rawAssignedTo),
           assignedToColor: agentColor(rawAssignedTo),
           assignedToAvatar: buildAgentAvatar(rawAssignedTo),
+          githubRepo,
           created: fm.created || '',
           updated: fm.updated || '',
           dependsOn: fm.dependsOn || null,
