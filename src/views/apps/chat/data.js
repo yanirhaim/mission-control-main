@@ -3,52 +3,52 @@ const minutesAgo = minutes => new Date(Date.now() - minutes * 60 * 1000)
 export const initialChatData = {
   profileUser: {
     id: 1,
-    avatar: '/images/avatars/1.png',
-    fullName: 'John Doe',
-    role: 'Mission Lead',
+    avatar: '/images/avatars/luchito.png',
+    fullName: 'Luchito',
+    role: 'CEO',
     status: 'online'
   },
   members: [
     {
       id: 1,
-      fullName: 'John Doe',
-      role: 'Mission Lead',
-      avatar: '/images/avatars/1.png',
+      fullName: 'Luchito',
+      role: 'CEO',
+      avatar: '/images/avatars/luchito.png',
       status: 'online'
     },
     {
       id: 2,
-      fullName: 'Felecia Rower',
-      role: 'Frontend Engineer',
-      avatar: '/images/avatars/2.png',
+      fullName: 'Mantis',
+      role: 'Engineering Lead',
+      avatar: '/images/avatars/mantis.png',
       status: 'offline'
     },
     {
       id: 3,
-      fullName: 'Adalberto Granzin',
-      role: 'Product Design',
-      avatarColor: 'primary',
+      fullName: 'Rocket',
+      role: 'Engineer',
+      avatar: '/images/avatars/rocket.png',
       status: 'busy'
     },
     {
       id: 8,
-      fullName: 'Miguel Guelff',
-      role: 'Operations',
-      avatar: '/images/avatars/7.png',
+      fullName: 'Star Lord',
+      role: 'Architect',
+      avatar: '/images/avatars/starlord.png',
       status: 'online'
     },
     {
       id: 11,
-      fullName: 'Ramonita Veras',
-      role: 'Executive Sponsor',
-      avatar: '/images/avatars/4.png',
+      fullName: 'Grok',
+      role: 'QA',
+      avatar: '/images/avatars/grok.png',
       status: 'online'
     },
     {
       id: 12,
-      fullName: 'Lashawna Gotschall',
-      role: 'Research',
-      avatarColor: 'info',
+      fullName: 'Yanir',
+      role: 'Founder',
+      avatarColor: 'primary',
       status: 'online'
     }
   ],

@@ -2,6 +2,7 @@ const typography = fontFamily => ({
   fontFamily:
     typeof fontFamily === 'undefined' || fontFamily === ''
       ? [
+          '"Google Sans"',
           '"Public Sans"',
           'sans-serif',
           '-apple-system',
@@ -16,7 +17,7 @@ const typography = fontFamily => ({
           '"Segoe UI Symbol"'
         ].join(',')
       : fontFamily,
-  fontSize: 11,
+  fontSize: 13.5,
   h1: {
     fontSize: '2.875rem',
     fontWeight: 500,

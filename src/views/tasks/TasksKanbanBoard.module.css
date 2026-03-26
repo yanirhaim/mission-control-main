@@ -19,12 +19,13 @@
 
 .column {
   flex: 1 1 0;
-  min-inline-size: 14rem;
+  min-inline-size: 16rem;
   border: 1px solid var(--mui-palette-divider);
   border-radius: 16px;
   background: color-mix(in srgb, var(--mui-palette-background-paper) 92%, transparent);
   display: flex;
   flex-direction: column;
+  overflow: hidden;
 }
 
 .columnHeader {
@@ -60,10 +61,15 @@
   cursor: pointer;
   width: 100%;
   word-break: break-word;
+  overflow: hidden;
   transition:
     transform 150ms ease,
     box-shadow 150ms ease,
     border-color 150ms ease;
+}
+
+.taskCard :global(.MuiCardContent-root) {
+  padding: 16px;
 }
 
 .taskCard:hover {

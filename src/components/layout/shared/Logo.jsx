@@ -6,9 +6,6 @@ import { useEffect, useRef } from 'react'
 // Third-party Imports
 import styled from '@emotion/styled'
 
-// Component Imports
-import VuexyLogo from '@core/svg/Logo'
-
 // Config Imports
 import themeConfig from '@configs/themeConfig'
 
@@ -59,7 +56,13 @@ const Logo = ({ color }) => {
 
   return (
     <div className='flex items-center'>
-      <VuexyLogo className='text-2xl text-primary' />
+      <img
+        src='/images/avatars/logo.png'
+        alt='Logo'
+        width={34}
+        height={34}
+        style={{ borderRadius: 8, objectFit: 'contain' }}
+      />
       <LogoText
         color={color}
         ref={logoTextRef}
