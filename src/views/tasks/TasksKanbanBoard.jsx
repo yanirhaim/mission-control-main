@@ -54,9 +54,9 @@ const KanbanTaskCard = ({ task, allTasks, onOpenTask }) => {
 
         <div className='flex items-center gap-3'>
           <CustomAvatar size={28} skin='light' color='primary'>
-            {task.assignedTo.slice(0, 2).toUpperCase()}
+            {(task.assignedToDisplay ?? task.assignedTo).slice(0, 2).toUpperCase()}
           </CustomAvatar>
-          <Typography color='text.primary'>{task.assignedTo}</Typography>
+          <Typography color='text.primary'>{task.assignedToDisplay ?? task.assignedTo}</Typography>
         </div>
 
         <DependencyState task={task} dependencyTask={dependencyTask} blocked={blocked} allTasks={allTasks} />

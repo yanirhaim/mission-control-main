@@ -201,11 +201,16 @@ const TasksWorkspace = ({ initialTasks, projects, onAdvanceTask }) => {
                 className='max-lg:is-full lg:is-[170px]'
               >
                 <MenuItem value='all'>All Assignees</MenuItem>
-                {assignees.map(assignee => (
-                  <MenuItem key={assignee} value={assignee}>
-                    {assignee}
-                  </MenuItem>
-                ))}
+                {assignees.map(assignee => {
+                  const displayTask = tasks.find(t => t.assignedTo === assignee)
+                  const displayName = displayTask?.assignedToDisplay ?? assignee
+
+                  return (
+                    <MenuItem key={assignee} value={assignee}>
+                      {displayName}
+                    </MenuItem>
+                  )
+                })}
               </CustomTextField>
 
               <CustomTextField
@@ -282,9 +287,9 @@ const TasksWorkspace = ({ initialTasks, projects, onAdvanceTask }) => {
                           <td>
                             <div className='flex items-center gap-3'>
                               <CustomAvatar size={28} skin='light' color='primary'>
-                                {task.assignedTo.slice(0, 2).toUpperCase()}
+                                {(task.assignedToDisplay ?? task.assignedTo).slice(0, 2).toUpperCase()}
                               </CustomAvatar>
-                              <Typography color='text.primary'>{task.assignedTo}</Typography>
+                              <Typography color='text.primary'>{task.assignedToDisplay ?? task.assignedTo}</Typography>
                             </div>
                           </td>
                           <td>

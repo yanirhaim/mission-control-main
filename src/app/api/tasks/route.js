@@ -3,6 +3,7 @@ import path from 'path'
 
 import { NextResponse } from 'next/server'
 
+import { agentDisplayName, agentColor } from '@/lib/agents'
 import { projects as mockProjects, tasks as mockTasks } from '@/data/mock/tasks'
 
 const VAULT_PROJECTS_DIR = '/root/.openclaw/workspace/vault/projects'
@@ -74,13 +75,17 @@ async function loadFromVault() {
         const activityMatch = content.match(/## Activity Log\n([\s\S]*?)(?:\n##|$)/)
         const criteriaMatch = content.match(/## Acceptance Criteria\n([\s\S]*?)(?:\n##|$)/)
 
+        const rawAssignedTo = fm.assignedTo || 'unassigned'
+
         tasks.push({
           id: fm.taskId || file.replace('.md', ''),
           title: fm.title || file.replace('.md', ''),
           projectId: fm.projectId || projectMeta.projectId,
           projectName: fm.projectName || projectMeta.projectName,
           status: fm.status || 'in_queue',
-          assignedTo: fm.assignedTo || 'unassigned',
+          assignedTo: rawAssignedTo,
+          assignedToDisplay: agentDisplayName(rawAssignedTo),
+          assignedToColor: agentColor(rawAssignedTo),
           created: fm.created || '',
           updated: fm.updated || '',
           dependsOn: fm.dependsOn || null,
@@ -113,7 +118,11 @@ async function getState() {
   stateCache = {
     source,
     projects: vaultData ? vaultData.projects : mockProjects,
-    tasks: (vaultData ? vaultData.tasks : mockTasks).map(t => ({ ...t })),
+    tasks: (vaultData ? vaultData.tasks : mockTasks).map(t => ({
+      ...t,
+      assignedToDisplay: agentDisplayName(t.assignedTo),
+      assignedToColor: agentColor(t.assignedTo),
+    })),
   }
 
   return stateCache

@@ -4,7 +4,7 @@
  */
 
 const GATEWAY_URL = 'http://127.0.0.1:18789/tools/invoke'
-const GATEWAY_TOKEN = process.env.OPENCLAW_GATEWAY_TOKEN || 'f2b11de8bcfaa7333502a58002af1010e4a200d4372088f5'
+const GATEWAY_TOKEN = process.env.OPENCLAW_GATEWAY_TOKEN || 'c300a92484f98da23fc7d16d4c9124f76f38bcb7717c279d'
 
 /**
  * Invoke an OpenClaw tool via the gateway HTTP API.

@@ -101,7 +101,7 @@ const TaskDrawer = ({ open, task, isBlocked, dependencyTask, onClose, onAdvanceT
                 <Typography sx={sectionTitleStyles}>Metadata</Typography>
                 <Stack spacing={1.5}>
                   <Typography color='text.secondary'>
-                    Assigned to: <Typography component='span' color='text.primary'>{task.assignedTo}</Typography>
+                    Assigned to: <Typography component='span' color='text.primary'>{task.assignedToDisplay ?? task.assignedTo}</Typography>
                   </Typography>
                   <Typography color='text.secondary'>
                     Project: <Typography component='span' color='text.primary'>{task.projectName}</Typography>

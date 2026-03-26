@@ -1,48 +1,7 @@
 import { NextResponse } from 'next/server'
 
+import { AGENT_REGISTRY, DEPARTMENT_COLOR, buildAgentAvatar } from '@/lib/agents'
 import { invokeTool } from '@/lib/openclaw'
-
-// Full agent roster — always shown regardless of active sessions
-export const AGENT_REGISTRY = {
-  main: {
-    name: 'Luchito',
-    role: 'CEO',
-    department: 'Leadership',
-    color: '#7C3AED',
-  },
-  mantis: {
-    name: 'Mantis',
-    role: 'Engineering Lead',
-    department: 'Engineering',
-    color: '#2563EB',
-  },
-  rocket: {
-    name: 'Rocket',
-    role: 'Engineer',
-    department: 'Engineering',
-    color: '#0F766E',
-  },
-  'star-lord': {
-    name: 'Star Lord',
-    role: 'Architect',
-    department: 'Engineering',
-    color: '#1D4ED8',
-  },
-  grok: {
-    name: 'Grok',
-    role: 'QA',
-    department: 'Engineering',
-    color: '#0284C7',
-  },
-}
-
-const DEPARTMENT_COLOR = {
-  Leadership: 'secondary',
-  Engineering: 'info',
-  Product: 'success',
-  Operations: 'primary',
-  Support: 'error',
-}
 
 function extractAgentId(session) {
   const key = session.key ?? ''
@@ -68,19 +27,6 @@ function extractAgentId(session) {
   }
 
   return parts[parts.length - 1]
-}
-
-function buildAvatar(name, background) {
-  const initials = name
-    .split(' ')
-    .map(p => p[0])
-    .join('')
-    .slice(0, 2)
-    .toUpperCase()
-
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 320"><rect width="320" height="320" fill="${background}"/><text x="50%" y="53%" text-anchor="middle" dominant-baseline="middle" fill="#ffffff" font-family="Arial,sans-serif" font-size="108" font-weight="700">${initials}</text></svg>`
-
-  return `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`
 }
 
 export async function GET() {
@@ -134,7 +80,7 @@ export async function GET() {
       totalTokens: session?.totalTokens ?? 0,
       estimatedCostUsd: session?.estimatedCostUsd ?? 0,
       lastSeen: session?.updatedAt ? new Date(session.updatedAt).toISOString() : null,
-      avatar: buildAvatar(meta.name, meta.color),
+      avatar: buildAgentAvatar(agentId),
     })
   }
 
@@ -163,7 +109,7 @@ export async function GET() {
       totalTokens: session.totalTokens ?? 0,
       estimatedCostUsd: session.estimatedCostUsd ?? 0,
       lastSeen: session.updatedAt ? new Date(session.updatedAt).toISOString() : null,
-      avatar: buildAvatar(agentId, '#6B7280'),
+      avatar: buildAgentAvatar(agentId),
     })
   }
 
