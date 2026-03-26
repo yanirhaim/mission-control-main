@@ -18,7 +18,7 @@
 const themeConfig = {
   templateName: 'Mission Control',
   homePageUrl: '/home',
-  settingsCookieName: 'vuexy-mui-next-demo-1',
+  settingsCookieName: 'mission-control-settings',
   mode: 'system', // 'system', 'light', 'dark'
   skin: 'default', // 'default', 'bordered'
   semiDark: false, // true, false
