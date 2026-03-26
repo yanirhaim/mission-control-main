@@ -1,22 +1,54 @@
 import { NextResponse } from 'next/server'
 
+import { invokeTool } from '@/lib/openclaw'
+
 /**
  * POST /api/chat/send
- * Mock endpoint — accepts a message to inject into a session.
- * Replace with real gateway integration once backend is ready.
+ * Body: { sessionKey: string, message: string }
+ * Sends a message to the specified session via the gateway.
  */
 export async function POST(request) {
-  const body = await request.json()
-  const { sessionKey, message } = body
+  let body
 
+  try {
+    body = await request.json()
+  } catch {
+    return NextResponse.json(
+      { ok: false, error: 'Invalid JSON body' },
+      { status: 400 }
+    )
+  }
+
+  const { sessionKey, message } = body ?? {}
+
+  // Validate required fields
   if (!sessionKey || typeof sessionKey !== 'string') {
-    return NextResponse.json({ ok: false, error: 'sessionKey is required' }, { status: 400 })
+    return NextResponse.json(
+      { ok: false, error: 'sessionKey is required' },
+      { status: 400 }
+    )
   }
 
-  if (!message || typeof message !== 'string' || !message.trim()) {
-    return NextResponse.json({ ok: false, error: 'message must be a non-empty string' }, { status: 400 })
+  if (!message || typeof message !== 'string' || message.trim() === '') {
+    return NextResponse.json(
+      { ok: false, error: 'message is required and must be non-empty' },
+      { status: 400 }
+    )
   }
 
-  // In the real implementation this calls invokeTool('sessions_send', ...)
-  return NextResponse.json({ ok: true })
+  try {
+    await invokeTool('sessions_send', {
+      sessionKey,
+      message: message.trim(),
+      timeoutSeconds: 0,
+    })
+
+    return NextResponse.json({ ok: true })
+  } catch (err) {
+    console.error('[/api/chat/send] error:', err.message)
+    return NextResponse.json(
+      { ok: false, error: err.message },
+      { status: 500 }
+    )
+  }
 }
