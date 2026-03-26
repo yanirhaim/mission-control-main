@@ -77,6 +77,12 @@ const ChatContent = props => {
           <div className='flex grow items-center justify-center'>
             <CircularProgress size={32} />
           </div>
+        ) : activeThread?.sessionKey?.startsWith('task:') ? (
+          <div className='flex grow flex-col items-center justify-center gap-2 text-center px-6'>
+            <i className='tabler-player-stop text-4xl text-textDisabled' />
+            <Typography className='text-base font-semibold text-textSecondary'>No active session for this task</Typography>
+            <Typography className='text-sm text-textDisabled'>This task doesn't have a live agent session yet.</Typography>
+          </div>
         ) : (
           <ChatLog
             messages={messages}

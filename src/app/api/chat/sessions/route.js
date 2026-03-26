@@ -131,7 +131,7 @@ export async function GET() {
         if (!channelMap[projectId]) channelMap[projectId] = []
 
         channelMap[projectId].push({
-          sessionKey: null,
+          sessionKey: `task:${taskId}`,
           title: `${taskId.split('-').slice(1).join('-')} — ${title}`,
           taskId,
           projectId,
@@ -143,7 +143,7 @@ export async function GET() {
         if (!channelMap[projectId]) channelMap[projectId] = []
 
         channelMap[projectId].push({
-          sessionKey: null,
+          sessionKey: `task:${taskId}`,
           title: `${taskId.split('-').slice(1).join('-')} — ${title}`,
           taskId,
           projectId,

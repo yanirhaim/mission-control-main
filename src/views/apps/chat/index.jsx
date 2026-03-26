@@ -110,8 +110,13 @@ const ChatWrapper = () => {
   }, [])
 
   useEffect(() => {
-    if (activeThread?.sessionKey) {
-      loadHistory(activeThread.sessionKey)
+    const sessionKey = activeThread?.sessionKey
+
+    if (sessionKey && !sessionKey.startsWith('task:')) {
+      loadHistory(sessionKey)
+    } else {
+      // Cold task thread — no real session; clear any stale messages
+      setMessages([])
     }
   }, [activeThread?.sessionKey, loadHistory])
 
@@ -119,7 +124,8 @@ const ChatWrapper = () => {
   useEffect(() => {
     const sessionKey = activeThread?.sessionKey
 
-    if (!sessionKey) return
+    // Don't open an SSE stream for cold task threads (no real session)
+    if (!sessionKey || sessionKey.startsWith('task:')) return
 
     const encoded = encodeURIComponent(sessionKey)
     const es = new EventSource(`/api/chat/stream/${encoded}`)
